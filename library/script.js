@@ -45,6 +45,16 @@ function displayBooks() {
   });
 }
 
+function handleSubmit(e) {
+  e.preventDefault();
+  console.log("submitted");
+}
+
+const bookForm = document.querySelector(".book-form");
+const bookDialog = document.querySelector("dialog");
+
+bookForm.addEventListener("submit", handleSubmit);
+
 addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, false);
 addBookToLibrary("1984", "George Orwell", 328, true);
 
