@@ -10,12 +10,16 @@ function Book(title, author, pages, read) {
   this.author = author;
   this.pages = pages;
   this.read = read;
-
-  this.info = function () {
-    const readStatus = this.read ? "already read" : "not read yet";
-    return `${this.title} by ${this.author}, ${this.pages} pages, ${readStatus}`;
-  };
 }
+
+Book.prototype.info = function () {
+  const readStatus = this.read ? "already read" : "not read yet";
+  return `${this.title} by ${this.author}, ${this.pages} pages, ${readStatus}`;
+};
+
+Book.prototype.toggleRead = function () {
+  this.read = !this.read;
+};
 
 function addBookToLibrary(title, author, pages, read) {
   const book = new Book(title, author, pages, read);
@@ -25,37 +29,63 @@ function addBookToLibrary(title, author, pages, read) {
 
 function displayBooks() {
   libraryDiv.replaceChildren();
+
   myLibrary.forEach((book) => {
+    // card
     const bookDiv = document.createElement("div");
     bookDiv.classList.add("book");
+    if (book.read) bookDiv.classList.add("is-read");
+
+    // title + author
     const bookTitleHeading = document.createElement("h2");
-    const bookAuthorP = document.createElement("p");
-    const bookPagesP = document.createElement("p");
-    const bookReadP = document.createElement("p");
-    const bookRemove = document.createElement("button");
-
     bookTitleHeading.textContent = book.title;
-    bookAuthorP.textContent = "Author: " + book.author;
-    bookPagesP.textContent = "Pages: " + book.pages;
-    bookReadP.textContent =
-      "Read?: " + (book.read ? "already read" : "not read yet");
-    bookRemove.textContent = "Remove book";
 
+    const bookAuthorP = document.createElement("p");
+    bookAuthorP.classList.add("book-author");
+    bookAuthorP.textContent = "by " + book.author;
+
+    // pages + status badge
+    const bookMeta = document.createElement("div");
+    bookMeta.classList.add("book-meta");
+
+    const bookPagesP = document.createElement("p");
+    bookPagesP.classList.add("book-pages");
+    bookPagesP.textContent = `${book.pages} pages`;
+
+    const bookReadStatus = document.createElement("span");
+    bookReadStatus.classList.add(
+      "read-status",
+      book.read ? "is-read" : "not-read",
+    );
+    bookReadStatus.textContent = book.read ? "Read" : "Not read";
+
+    bookMeta.append(bookPagesP, bookReadStatus);
+
+    // toggle + remove
+    const bookActions = document.createElement("div");
+    bookActions.classList.add("book-actions");
+
+    const bookReadBtn = document.createElement("button");
+    bookReadBtn.classList.add("toggle-read-btn");
+    bookReadBtn.textContent = book.read ? "Mark as unread" : "Mark as read";
+    bookReadBtn.addEventListener("click", () => {
+      book.toggleRead();
+      displayBooks();
+    });
+
+    const bookRemove = document.createElement("button");
+    bookRemove.classList.add("remove-btn");
+    bookRemove.textContent = "Remove";
     bookRemove.addEventListener("click", () => {
-      const bookIndex = myLibrary.findIndex((item) => book.id === item.id);
+      const bookIndex = myLibrary.findIndex((item) => item.id === book.id);
       if (bookIndex < 0) return;
       myLibrary.splice(bookIndex, 1);
       displayBooks();
     });
 
-    bookDiv.append(
-      bookTitleHeading,
-      bookAuthorP,
-      bookPagesP,
-      bookReadP,
-      bookRemove,
-    );
+    bookActions.append(bookReadBtn, bookRemove);
 
+    bookDiv.append(bookTitleHeading, bookAuthorP, bookMeta, bookActions);
     libraryDiv.appendChild(bookDiv);
   });
 }
