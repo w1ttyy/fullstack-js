@@ -24,7 +24,7 @@ function addBookToLibrary(title, author, pages, read) {
 }
 
 function displayBooks() {
-  const libraryDiv = document.querySelector(".library");
+  libraryDiv.replaceChildren();
   myLibrary.forEach((book) => {
     const bookDiv = document.createElement("div");
     bookDiv.classList.add("book");
@@ -32,14 +32,29 @@ function displayBooks() {
     const bookAuthorP = document.createElement("p");
     const bookPagesP = document.createElement("p");
     const bookReadP = document.createElement("p");
+    const bookRemove = document.createElement("button");
 
     bookTitleHeading.textContent = book.title;
     bookAuthorP.textContent = "Author: " + book.author;
     bookPagesP.textContent = "Pages: " + book.pages;
     bookReadP.textContent =
       "Read?: " + (book.read ? "already read" : "not read yet");
+    bookRemove.textContent = "Remove book";
 
-    bookDiv.append(bookTitleHeading, bookAuthorP, bookPagesP, bookReadP);
+    bookRemove.addEventListener("click", () => {
+      const bookIndex = myLibrary.findIndex((item) => book.id === item.id);
+      if (bookIndex < 0) return;
+      myLibrary.splice(bookIndex, 1);
+      displayBooks();
+    });
+
+    bookDiv.append(
+      bookTitleHeading,
+      bookAuthorP,
+      bookPagesP,
+      bookReadP,
+      bookRemove,
+    );
 
     libraryDiv.appendChild(bookDiv);
   });
@@ -47,11 +62,26 @@ function displayBooks() {
 
 function handleSubmit(e) {
   e.preventDefault();
-  console.log("submitted");
+
+  const title = titleInput.value;
+  const author = authorInput.value;
+  const pages = Number(pagesInput.value);
+  const read = readInput.checked;
+
+  addBookToLibrary(title, author, pages, read);
+  displayBooks();
+
+  bookForm.reset();
+  bookDialog.close();
 }
 
 const bookForm = document.querySelector(".book-form");
-const bookDialog = document.querySelector("dialog");
+const bookDialog = document.querySelector("#book-dialog");
+const libraryDiv = document.querySelector(".library");
+const titleInput = document.querySelector("#bookTitle");
+const authorInput = document.querySelector("#bookAuthor");
+const pagesInput = document.querySelector("#bookPages");
+const readInput = document.querySelector("#bookRead");
 
 bookForm.addEventListener("submit", handleSubmit);
 
