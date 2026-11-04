@@ -76,7 +76,9 @@ const GameController = (function () {
 
   const getResult = () => result;
 
-  const restart = () => {
+  const restart = (name1, name2) => {
+    player1.name = name1;
+    player2.name = name2;
     inTurn = player1;
     result = null;
     Gameboard.reset();
@@ -88,7 +90,9 @@ const GameController = (function () {
 const DisplayController = (function () {
   const boardButtons = document.querySelectorAll(".cell");
   const statusP = document.querySelector("#status");
-  const restartButton = document.querySelector("#restart-button");
+  const playerForm = document.querySelector("#player-form");
+  const player1Input = document.querySelector("#name1");
+  const player2Input = document.querySelector("#name2");
 
   const render = () => {
     const boardState = Gameboard.getBoard();
@@ -111,8 +115,13 @@ const DisplayController = (function () {
     });
   });
 
-  restartButton.addEventListener("click", () => {
-    GameController.restart();
+  playerForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const player1Name = player1Input.value || "Player 1";
+    const player2Name = player2Input.value || "Player 2";
+
+    GameController.restart(player1Name, player2Name);
     render();
   });
 
