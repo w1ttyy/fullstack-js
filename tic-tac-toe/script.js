@@ -54,18 +54,27 @@ const GameController = (function () {
   const player2 = createPlayer("Player 2", "X");
 
   let inTurn = player1;
+  let result = null;
 
   const getActivePlayer = () => inTurn;
 
   const playRound = (index) => {
+    if (result !== null) {
+      return;
+    }
+
     if (Gameboard.placeMark(index, inTurn.mark)) {
-      if (inTurn === player1) {
-        inTurn = player2;
+      if (Gameboard.checkWin(inTurn.mark)) {
+        result = `${inTurn.name} wins`;
+      } else if (Gameboard.isFull()) {
+        result = "Tie";
       } else {
-        inTurn = player1;
+        inTurn = inTurn === player1 ? player2 : player1;
       }
     }
   };
 
-  return { getActivePlayer, playRound };
+  const getResult = () => result;
+
+  return { getActivePlayer, playRound, getResult };
 })();
