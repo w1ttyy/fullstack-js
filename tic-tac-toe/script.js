@@ -76,11 +76,19 @@ const GameController = (function () {
 
   const getResult = () => result;
 
-  return { getActivePlayer, playRound, getResult };
+  const restart = () => {
+    inTurn = player1;
+    result = null;
+    Gameboard.reset();
+  };
+
+  return { getActivePlayer, playRound, getResult, restart };
 })();
 
 const DisplayController = (function () {
   const boardButtons = document.querySelectorAll(".cell");
+  const statusP = document.querySelector("#status");
+  const restartButton = document.querySelector("#restart-button");
 
   const render = () => {
     const boardState = Gameboard.getBoard();
@@ -88,6 +96,11 @@ const DisplayController = (function () {
     boardButtons.forEach((button, index) => {
       button.textContent = boardState[index];
     });
+    if (GameController.getResult() === null) {
+      statusP.textContent = "In turn: " + GameController.getActivePlayer().name;
+    } else {
+      statusP.textContent = GameController.getResult();
+    }
   };
 
   boardButtons.forEach((button) => {
@@ -97,6 +110,13 @@ const DisplayController = (function () {
       render();
     });
   });
+
+  restartButton.addEventListener("click", () => {
+    GameController.restart();
+    render();
+  });
+
+  render();
 
   return { render };
 })();
