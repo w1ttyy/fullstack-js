@@ -78,3 +78,16 @@ const GameController = (function () {
 
   return { getActivePlayer, playRound, getResult };
 })();
+
+const DisplayController = (function () {
+  const boardButtons = document.querySelectorAll(".cell");
+
+  const render = () => {
+    const boardState = Gameboard.getBoard();
+
+    boardButtons.forEach((button, index) => {
+      button.textContent = boardState[index];
+    });
+  };
+  return { render };
+})();
