@@ -1,11 +1,183 @@
+:root {
+    /* Colors */
+    --page-background: #eaeff5;
+    --card-background: #ffffff;
+    --tile-background: #f3f5f8;
+    --tile-hover: #e4e9f1;
+    --status-background: #e8edf4;
+    --primary: #4c6fa5;
+    --primary-hover: #3b5a8a;
+    --border: #7b899b;
+    --text: #26323f;
+    --text-muted: #4a5766;
+    --white: #ffffff;
+
+    /* Shapes */
+    --radius-large: 24px;
+    --radius-medium: 14px;
+    --radius-small: 10px;
+    --shadow: 0 16px 40px rgba(38, 50, 63, 0.1);
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-#board {
+body {
+    min-height: 100vh;
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--page-background);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Top card */
+.control-bar {
+    width: min(100%, 440px);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: var(--card-background);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow);
+}
+
+/* Each label sits above its own input */
+#player-form {
     display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+}
+
+label[for="name1"] {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#name1 {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+label[for="name2"] {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+#name2 {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+label {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 12px;
+    background-color: var(--white);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-small);
+    font: inherit;
+}
+
+#player-form button {
+    grid-column: 1 / -1;
+    margin-top: 12px;
+    padding: 12px 16px;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-small);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+#player-form button:hover {
+    background-color: var(--primary-hover);
+}
+
+#status {
+    padding: 12px 16px;
+    background-color: var(--status-background);
+    border-radius: 999px;
+    font-weight: 600;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+/* Board card */
+#board {
+    width: min(100%, 440px);
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    background-color: var(--card-background);
+    border-radius: var(--radius-large);
+    box-shadow: var(--shadow);
+}
+
+.cell {
+    aspect-ratio: 1;
+    background-color: var(--tile-background);
+    color: var(--primary);
+    border: none;
+    border-radius: var(--radius-medium);
+    font: inherit;
+    font-size: clamp(2.25rem, 12vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1;
+    cursor: default;
+    transition: background-color 150ms ease;
+}
+
+/* :empty matches only cells without a mark */
+.cell:empty {
+    cursor: pointer;
+}
+
+.cell:empty:hover {
+    background-color: var(--tile-hover);
+}
+
+/* Visible keyboard focus */
+input:focus-visible,
+button:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Stack the name fields on narrow screens */
+@media (max-width: 420px) {
+    #player-form {
+        grid-template-columns: 1fr;
+    }
+
+    label[for="name1"],
+    #name1,
+    label[for="name2"],
+    #name2 {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    label[for="name2"] {
+        margin-top: 10px;
+    }
 }

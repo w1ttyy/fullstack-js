@@ -34,13 +34,7 @@ const Gameboard = (function () {
     });
   };
 
-  const isFull = () => {
-    if (!board.includes("")) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  const isFull = () => !board.includes("");
 
   return { getBoard, placeMark, reset, checkWin, isFull };
 })();
