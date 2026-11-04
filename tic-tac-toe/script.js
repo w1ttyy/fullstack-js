@@ -89,5 +89,14 @@ const DisplayController = (function () {
       button.textContent = boardState[index];
     });
   };
+
+  boardButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const cellIndex = Number(button.dataset.index);
+      GameController.playRound(cellIndex);
+      render();
+    });
+  });
+
   return { render };
 })();
